@@ -9,7 +9,7 @@
 #include "Player.h"
 
 // Constructor for the Player class
-Player::Player(SmartVector<Card> c) {
+Player::Player(SmartVector<Card> c) : hand_{ c } {
 }
 
 // Play card is a function to play a card given a turn, the general strategy is
@@ -25,6 +25,27 @@ Player::Player(SmartVector<Card> c) {
 // Return true, if you are beating the current bestCard, and false otherwise
 //
 bool Player::PlayCard(Card bestCard, std::string trump, int turn) {
+	hand_.Sort();
+	Card Highcard = hand_[hand_.Size() - 1];
+	if (turn == 1) {
+		played_ = Highcard;
+		return true;
+	}
+	else {
+		std::vector<int> high = hand_.Search(bestCard);
+		int athand = high[high.size() - 1];
+		if (athand > 0) {
+			Highcard = hand_[athand];
+		}
+		else {
+			Highcard = hand_[0];
+		}
+	}
+	played_ = Highcard;
+	if (Highcard > bestCard) {
+		return true;
+	}
+	return false;
 }
 
 

@@ -29,12 +29,18 @@ private:
 	}
 
 public:
+
+	T operator [](int i) const { return smartVector_[i]; }
+	T& operator [](int i) { return smartVector_[i]; }
 	// Constructor accepts std::vector
-	SmartVector(const std::vector<T>& t) {
+	SmartVector(const std::vector<T>& t) : smartVector_{ t } {
 	}
 
 	// Constructor accepts T array and array size
 	SmartVector(const T t[], int s) {	
+		for (int i = 0; i < s; i++) {
+			smartVector_.push_back(t[i]);
+		}
 	}
 
 	// Push function with T array and array size - similar to std::vector.push_back
@@ -61,27 +67,56 @@ public:
 	// Random shuffle all element inside the vector - use random shuffle
 	// Link: https://en.cppreference.com/w/cpp/algorithm/random_shuffle
 	void Shuffle() {
-
+		for (int i = 0; i < smartVector_.size(); i++) {
+			int rand = genrand(0, smartVector_.size());
+			smartVector_[i] += smartVector_[rand];
+			smartVector_[rand] = smartVector_[i] - smartVector_[rand];
+			smartVector_[i] = smartVector_[i] - smartVector_[rand];
+		}
 	}
 
 	// Return indexes for all matching elements (as std::vector) in the vector given the argument
 	std::vector<int> Search(T match) {
+		int temp;
+		std::vector<int> out;
+		int start = smartVector_.begin();
+		while (temp != smartVector_.end()) {
+			temp = std::search(start, smartVector_.end(), match);
+
+			if (temp != smartVector_.end()) {
+				out.push_back(temp);
+				start = temp + 1;
+			}
+		}
+		return out;
 	}
 
 	// Return the element of a given index - similar to std::vector.at
 	T At(int i) {
+		return smartVector_[i];
 	}
 
 	// Return the maximum size of the vector - similar to std::vector.size
 	int Size() const {
+		return smartVector_.size();
 	}
 
 	// Return the element of vector from index b, until index e 
 	SmartVector<T> Range(int b, int e) {
+		std::vector<T> e;
+		SmartVector<T> out;
+		
+		for (int i = b; i <= e; i++) {
+			e.push_back(smartVector_[i]);
+		}
+
+		out.Push(e, e.size());
+		return out;
 	}
 
 	// Erase a vector element given index
 	void Erase(int index) {
+		smartVector_.erase(smartVector_.begin() + index);
 	}
 
 };

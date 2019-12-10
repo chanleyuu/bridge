@@ -17,10 +17,26 @@ struct Card {
 
 	// overload the less than operator (<)
 	bool operator<(const Card& c) const {
+		if (c.value_ < this->value_) {
+			return true;
+		}
+		return false;
+	}
+
+	// overload the less than operator (<)
+	bool operator>(const Card& c) const {
+		if (c.value_ > this->value_) {
+			return false;
+		}
+		return true;
 	}
 
 	// overload the equality operator (==)
 	bool operator==(const Card& c) const {
+		if (c.value_ != this->value_) {
+			return false;
+		}
+		return true;
 	}
 };
 
